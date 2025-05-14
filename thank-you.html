@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thank You - ShopEasy</title>
+    <!-- Your existing styles -->
+</head>
+<body>
+    <div class="thank-you-container">
+        <i class="fas fa-check-circle"></i>
+        <h1>Order Confirmed!</h1>
+        <p id="confirmationMessage"></p>
+        <a href="products.html" class="btn">Continue Shopping</a>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        document.getElementById('confirmationMessage').textContent = 
+            `A confirmation has been sent to ${email}. Your order will be processed shortly.`;
+    </script>
+</body>
+</html>

@@ -28,3 +28,8 @@ document.querySelectorAll('.nav-links a').forEach(link => {
         document.querySelector('.nav-links').classList.remove('active');
     });
 });
+// Pause video on mobile to save data
+if (window.innerWidth < 768) {
+    document.getElementById('heroVideo').pause();
+    document.getElementById('heroVideo').poster = "assets/hero-mobile.jpg";
+}

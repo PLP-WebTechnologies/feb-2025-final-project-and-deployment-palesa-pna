@@ -7,30 +7,112 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Add to cart animation */
+        @keyframes addToCart {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .added-to-cart {
+            animation: addToCart 0.5s ease;
+        }
+        
+        /* Filter sidebar */
+        .filter-sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            z-index: 1000;
+            transition: left 0.3s ease;
+        }
+        
+        .filter-sidebar.active {
+            left: 0;
+        }
+        
+        .filter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .filter-overlay.active {
+            display: block;
+        }
+        
+        .close-filters {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-   <header class="main-header">
-    <nav class="navbar">
-        <a href="index.html" class="logo">
-            <i class="fas fa-shopping-bag"></i> ShopEasy
-        </a>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="products.html" class="active">Products</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li class="cart-icon">
-                <a href="cart.html">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">0</span>
-                </a>
-            </li>
-        </ul>
-        <div class="hamburger">
-            <i class="fas fa-bars"></i>
+    <!-- Navigation Header -->
+    <header class="main-header">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i> ShopEasy
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html" class="active">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li class="cart-icon">
+                    <a href="cart.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Filter Sidebar -->
+    <div class="filter-sidebar" id="filterSidebar">
+        <span class="close-filters">&times;</span>
+        <h3>Filters</h3>
+        <div class="filter-group">
+            <h4>Categories</h4>
+            <label><input type="checkbox" name="category" value="electronics"> Electronics</label>
+            <label><input type="checkbox" name="category" value="accessories"> Accessories</label>
+            <label><input type="checkbox" name="category" value="audio"> Audio</label>
         </div>
-    </nav>
-</header>
+        <div class="filter-group">
+            <h4>Price Range</h4>
+            <input type="range" min="50" max="1000" value="500" class="price-slider" id="priceRange">
+            <div class="price-range">
+                <span>R50</span>
+                <span>R1000</span>
+            </div>
+        </div>
+        <div class="filter-group">
+            <h4>Brand</h4>
+            <label><input type="checkbox" name="brand" value="sony"> Sony</label>
+            <label><input type="checkbox" name="brand" value="samsung"> Samsung</label>
+            <label><input type="checkbox" name="brand" value="apple"> Apple</label>
+        </div>
+        <button class="btn-apply-filters">Apply Filters</button>
+    </div>
+    <div class="filter-overlay" id="filterOverlay"></div>
 
     <!-- Products Hero Banner -->
     <section class="products-hero" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('assets/products-banner.jpg');">
@@ -45,25 +127,25 @@
         <div class="container">
             <!-- Filters and Sorting -->
             <div class="products-toolbar">
-                <div class="filter-toggle">
+                <div class="filter-toggle" id="filterToggle">
                     <i class="fas fa-filter"></i> Filters
                 </div>
                 <div class="sorting">
                     <label>Sort by:</label>
-                    <select>
-                        <option>Featured</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                        <option>Newest Arrivals</option>
-                        <option>Best Sellers</option>
+                    <select id="sortProducts">
+                        <option value="featured">Featured</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="newest">Newest Arrivals</option>
+                        <option value="rating">Best Rated</option>
                     </select>
                 </div>
             </div>
 
             <!-- Products Grid -->
-            <div class="products-grid">
+            <div class="products-grid" id="productsGrid">
                 <!-- Product 1 -->
-                <div class="product-card">
+                <div class="product-card" data-category="electronics audio" data-brand="sony" data-price="199.99" data-rating="4.5" data-date="2023-10-15">
                     <div class="product-badge">Sale</div>
                     <img src="assets/products/earbuds.jpg" alt="Wireless Earbuds">
                     <div class="product-info">
@@ -80,14 +162,14 @@
                             <span class="current-price">R199.99</span>
                             <span class="original-price">R249.99</span>
                         </div>
-                        <button class="btn btn-add-to-cart">
+                        <button class="btn btn-add-to-cart" data-id="1" data-name="Premium Wireless Earbuds" data-price="199.99">
                             <i class="fas fa-cart-plus"></i> Add to Cart
                         </button>
                     </div>
                 </div>
 
                 <!-- Product 2 -->
-                <div class="product-card">
+                <div class="product-card" data-category="electronics" data-brand="samsung" data-price="599.99" data-rating="4" data-date="2023-11-01">
                     <div class="product-badge">New</div>
                     <img src="assets/products/smar watch pro.jpg" alt="Smart Watch">
                     <div class="product-info">
@@ -103,17 +185,17 @@
                         <div class="product-price">
                             <span class="current-price">R599.99</span>
                         </div>
-                        <button class="btn btn-add-to-cart">
+                        <button class="btn btn-add-to-cart" data-id="2" data-name="Smart Watch Pro" data-price="599.99">
                             <i class="fas fa-cart-plus"></i> Add to Cart
                         </button>
                     </div>
                 </div>
-<!-- Product 3 -->
+               <!-- Product 3 -->
                 <div class="product-card">
                     <div class="product-badge">New</div>
                     <img src="assets/products/laptop.jpg" alt="Smart Watch">
                     <div class="product-info">
-                        <h3>laptop</h3>
+                        <h3>Asus TUF Gaming laptop</h3>
                         <div class="product-rating">
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
@@ -174,7 +256,7 @@
                         </button>
                     </div>
                 </div>
-                <!-- Product 2 -->
+                <!-- Product 6 -->
                 <div class="product-card">
                     <div class="product-badge">Sale</div>
                     <img src="assets/products/camera.jpg" alt="Smart Watch">
@@ -196,7 +278,8 @@
                         </button>
                     </div>
                 </div>
-                <!-- Product 3-12 would follow the same pattern -->
+
+                <!-- More products... -->
                 
                 <!-- Pagination -->
                 <div class="pagination">
@@ -209,11 +292,154 @@
         </div>
     </section>
 
-    <!-- Footer (Same as Homepage) -->
+    <!-- Footer -->
     <footer class="main-footer">
         <!-- Your existing footer content -->
     </footer>
 
     <script src="scripts/app.js"></script>
+    <script>
+        // Cart functionality
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartCount = document.querySelector('.cart-count');
+        
+        // Update cart count
+        function updateCartCount() {
+            cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
+        }
+        
+        // Add to cart
+        document.querySelectorAll('.btn-add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = this.getAttribute('data-id');
+                const productName = this.getAttribute('data-name');
+                const productPrice = parseFloat(this.getAttribute('data-price'));
+                
+                // Add animation
+                this.classList.add('added-to-cart');
+                setTimeout(() => {
+                    this.classList.remove('added-to-cart');
+                }, 500);
+                
+                // Add to cart
+                const existingItem = cart.find(item => item.id === productId);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    cart.push({
+                        id: productId,
+                        name: productName,
+                        price: productPrice,
+                        quantity: 1
+                    });
+                }
+                
+                // Save to localStorage and update count
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                
+                // Show confirmation
+                const confirmation = document.createElement('div');
+                confirmation.textContent = `${productName} added to cart!`;
+                confirmation.style.position = 'fixed';
+                confirmation.style.bottom = '20px';
+                confirmation.style.right = '20px';
+                confirmation.style.backgroundColor = '#4CAF50';
+                confirmation.style.color = 'white';
+                confirmation.style.padding = '10px 20px';
+                confirmation.style.borderRadius = '4px';
+                confirmation.style.zIndex = '1000';
+                document.body.appendChild(confirmation);
+                
+                setTimeout(() => {
+                    confirmation.remove();
+                }, 2000);
+            });
+        });
+        
+        // Initialize cart count
+        updateCartCount();
+        
+        // Filter functionality
+        const filterToggle = document.getElementById('filterToggle');
+        const filterSidebar = document.getElementById('filterSidebar');
+        const filterOverlay = document.getElementById('filterOverlay');
+        const closeFilters = document.querySelector('.close-filters');
+        const applyFilters = document.querySelector('.btn-apply-filters');
+        const sortSelect = document.getElementById('sortProducts');
+        
+        // Toggle filter sidebar
+        filterToggle.addEventListener('click', () => {
+            filterSidebar.classList.add('active');
+            filterOverlay.classList.add('active');
+        });
+        
+        closeFilters.addEventListener('click', () => {
+            filterSidebar.classList.remove('active');
+            filterOverlay.classList.remove('active');
+        });
+        
+        filterOverlay.addEventListener('click', () => {
+            filterSidebar.classList.remove('active');
+            filterOverlay.classList.remove('active');
+        });
+        
+        // Apply filters
+        applyFilters.addEventListener('click', () => {
+            const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(cb => cb.value);
+            const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(cb => cb.value);
+            const maxPrice = document.getElementById('priceRange').value;
+            
+            document.querySelectorAll('.product-card').forEach(card => {
+                const category = card.getAttribute('data-category').split(' ');
+                const brand = card.getAttribute('data-brand');
+                const price = parseFloat(card.getAttribute('data-price'));
+                
+                const categoryMatch = selectedCategories.length === 0 || selectedCategories.some(cat => category.includes(cat));
+                const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(brand);
+                const priceMatch = price <= maxPrice;
+                
+                if (categoryMatch && brandMatch && priceMatch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            filterSidebar.classList.remove('active');
+            filterOverlay.classList.remove('active');
+        });
+        
+        // Sorting functionality
+        sortSelect.addEventListener('change', function() {
+            const productsGrid = document.getElementById('productsGrid');
+            const productCards = Array.from(document.querySelectorAll('.product-card'));
+            
+            productCards.sort((a, b) => {
+                const aPrice = parseFloat(a.getAttribute('data-price'));
+                const bPrice = parseFloat(b.getAttribute('data-price'));
+                const aRating = parseFloat(a.getAttribute('data-rating'));
+                const bRating = parseFloat(b.getAttribute('data-rating'));
+                const aDate = new Date(a.getAttribute('data-date'));
+                const bDate = new Date(b.getAttribute('data-date'));
+                
+                switch(this.value) {
+                    case 'price-low':
+                        return aPrice - bPrice;
+                    case 'price-high':
+                        return bPrice - aPrice;
+                    case 'newest':
+                        return bDate - aDate;
+                    case 'rating':
+                        return bRating - aRating;
+                    default:
+                        return 0;
+                }
+            });
+            
+            // Re-append sorted products
+            productCards.forEach(card => productsGrid.appendChild(card));
+        });
+    </script>
 </body>
 </html>

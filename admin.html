@@ -1,0 +1,74 @@
+<!-- Add to your admin page -->
+<div id="Contacts" class="tabcontent">
+    <h2>Contact Submissions</h2>
+    <div class="export-buttons">
+        <button onclick="exportToCSV('contacts')">Export Contacts</button>
+        <button onclick="exportToCSV('newsletter')">Export Newsletter</button>
+    </div>
+    <table id="contactsTable">
+        <!-- Table content will be populated by JavaScript -->
+    </table>
+</div>
+
+<script>
+function loadContacts() {
+    const contacts = JSON.parse(localStorage.getItem('shopEasyContacts')) || [];
+    const table = document.getElementById('contactsTable');
+    
+    // Clear existing rows
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Subject</th>
+                <th>Subscribed</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+    
+    const tbody = table.querySelector('tbody');
+    
+    contacts.forEach(contact => {
+        const row = tbody.insertRow();
+        row.innerHTML = `
+            <td>${new Date(contact.timestamp).toLocaleString()}</td>
+            <td>${contact.name}</td>
+            <td>${contact.email}</td>
+            <td>${contact.subject}</td>
+            <td>${contact.newsletter ? 'Yes' : 'No'}</td>
+        `;
+    });
+}
+
+function exportToCSV(type) {
+    const data = JSON.parse(localStorage.getItem(`shopEasy${type.charAt(0).toUpperCase() + type.slice(1)}`)) || [];
+    if (data.length === 0) {
+        alert(`No ${type} data to export`);
+        return;
+    }
+    
+    let csv = '';
+    const headers = Object.keys(data[0]);
+    csv += headers.join(',') + '\n';
+    
+    data.forEach(item => {
+        const values = headers.map(header => {
+            if (header === 'timestamp') {
+                return new Date(item[header]).toLocaleString();
+            }
+            return item[header];
+        });
+        csv += values.join(',') + '\n';
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `shopeasy_${type}_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+}
+</script>

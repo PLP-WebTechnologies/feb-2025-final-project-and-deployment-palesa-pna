@@ -34,15 +34,60 @@
 
     <!-- Hero Section -->
     <section class="hero" style="
-        background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('assets/hero-bg.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 0 20px;
+        <!-- Hero Section with Video Background + Gradient Overlay -->
+<section class="hero" style="
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+    overflow: hidden;
+">
+    <!-- Video Background -->
+    <video autoplay muted loop playsinline style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        object-fit: cover;
+    ">
+        <source src="assets/videos/coverr-close-up-of-the-new-apple-iphone-12-camera-5-1080p.mp4" type="video/mp4">
+        <!-- Fallback image if video doesn't load -->
+        <img src="assets/hero-bg.jpg" alt="ShopEasy background" style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        ">
+    </video>
+
+    <!-- Gradient Overlay (same as your original) -->
+    <div style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5));
+        z-index: 1;
+    "></div>
+
+    <!-- Your Existing Content -->
+    <div class="hero-content" style="position: relative; z-index: 2;">
+        <h1>Welcome to ShopEasy</h1>
+        <p>Discover amazing products at unbeatable prices</p>
+        <a href="products.html" class="btn btn-primary">Shop Now</a>
+    </div>
+</section>
     ">
         <div class="hero-content">
             <h1>Welcome to ShopEasy</h1>
@@ -146,15 +191,62 @@
             <p style="margin-bottom: 25px;">Get exclusive deals and updates straight to your inbox</p>
             <form class="newsletter-form" id="newsletterForm">
                 <div style="display: flex; gap: 10px;">
-                    <input type="email" placeholder="Enter your email" required 
+                    <input type="email" id="newsletterEmail" placeholder="Enter your email" required 
                            style="flex: 1; padding: 12px 15px; border: 1px solid #ddd; border-radius: 4px;">
                     <button type="submit" class="btn btn-primary">Subscribe</button>
                 </div>
-                <div class="form-message"></div>
+                <div class="form-message" style="margin-top: 15px; min-height: 20px; text-align: center;"></div>
             </form>
         </div>
     </div>
 </section>
+
+<script>
+document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // This stops the page from reloading
+    
+    const emailInput = document.getElementById('newsletterEmail');
+    const email = emailInput.value.trim();
+    const messageDiv = document.querySelector('.form-message');
+    
+    // Clear previous messages
+    messageDiv.textContent = '';
+    messageDiv.style.color = 'inherit';
+    
+    // Validate email
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        messageDiv.textContent = 'Please enter a valid email address';
+        messageDiv.style.color = '#e74c3c';
+        emailInput.focus();
+        return;
+    }
+    
+    // Save to localStorage
+    let subscribers = JSON.parse(localStorage.getItem('shopEasyNewsletter')) || [];
+    
+    // Check if already subscribed
+    if (subscribers.some(sub => sub.email === email)) {
+        messageDiv.textContent = 'You\'re already subscribed!';
+        messageDiv.style.color = '#ffc107';
+    } else {
+        subscribers.push({
+            email: email,
+            subscribedAt: new Date().toISOString()
+        });
+        localStorage.setItem('shopEasyNewsletter', JSON.stringify(subscribers));
+        
+        // Show success
+        messageDiv.textContent = 'Thank you for subscribing! 🎉';
+        messageDiv.style.color = '#28a745';
+        emailInput.value = ''; // Clear the input
+        
+        // Optional: Hide message after 5 seconds
+        setTimeout(() => {
+            messageDiv.textContent = '';
+        }, 5000);
+    }
+});
+</script>
 
     <!-- Footer -->
     <footer class="main-footer">
