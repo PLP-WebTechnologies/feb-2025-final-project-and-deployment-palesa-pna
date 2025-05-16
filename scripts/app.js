@@ -17,17 +17,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelector('.nav-links');
     const overlay = document.querySelector('.mobile-menu-overlay');
     
-    hamburger.addEventListener('click', function() {
+    // Toggle menu
+    hamburger.addEventListener('click', function(e) {
+        e.stopPropagation();
         navLinks.classList.toggle('active');
         overlay.classList.toggle('active');
-        hamburger.classList.toggle('fa-times');
+        this.classList.toggle('fa-times');
     });
     
+    // Close menu when clicking outside
     overlay.addEventListener('click', function() {
         navLinks.classList.remove('active');
         overlay.classList.remove('active');
         hamburger.classList.remove('fa-times');
     });
+    
+    // Close menu when clicking on links
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function() {
+            navLinks.classList.remove('active');
+            overlay.classList.remove('active');
+            hamburger.classList.remove('fa-times');
+        });
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            navLinks.classList.remove('active');
+            overlay.classList.remove('active');
+            hamburger.classList.remove('fa-times');
+        }
+    });
+});
     
     // Close menu when clicking on links
     document.querySelectorAll('.nav-links a').forEach(link => {
