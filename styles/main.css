@@ -1,17 +1,9 @@
 /* Base Styles */
 :root {
-  --primary-color: #2563eb;
-  --primary-hover: #1d4ed8;
-  --secondary-color: #6b7280;
-  --accent-color: #f59e0b;
-  --light-gray: #f3f4f6;
-  --dark-gray: #374151;
-  --white: #ffffff;
-  --black: #111827;
-  --success-color: #10b981;
-  --error-color: #ef4444;
-  --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --transition: all 0.3s ease;
+    --light-gray: #f3f4f6; /* Light grey background */
+    --white: #ffffff;      /* White cards */
+    --primary-color: #2563eb; /* Accent color */
+    /* ... other variables ... */
 }
 
 * {
@@ -341,8 +333,157 @@ img {
   background-color: var(--primary-color);
 }
 
-.featured-section, 
-.about-section, 
+/* Featured Products Section */
+.featured-section {
+    padding: 80px 0;
+    background-color: var(--light-gray); /* Light grey background */
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.product-card {
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.product-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    z-index: 2;
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.03);
+}
+
+.product-info {
+    padding: 20px;
+}
+
+.product-title {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: var(--dark-gray);
+}
+
+.product-price {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.current-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.original-price {
+    font-size: 1rem;
+    color: var(--secondary-color);
+    text-decoration: line-through;
+}
+
+.btn-add-to-cart {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-add-to-cart:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .product-image {
+        height: 180px;
+    }
+} 
+/* About Section - Why Choose ShopEasy */
+.about-section {
+    padding: 80px 0;
+    background-color: var(--light-gray); /* Changed to light grey */
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.value-card {
+    background-color: var(--white); /* White cards on light grey background */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    text-align: center;
+}
+
+.value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.text-center {
+    text-align: center;
+    margin-top: 30px;
+}
 /* Newsletter Section */
 .newsletter-section {
     background-color: var(--primary-color);
@@ -637,6 +778,23 @@ img {
 @keyframes slideIn {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }
+}
+.add-to-cart-confirmation {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--success-color);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 4px;
+    box-shadow: var(--box-shadow);
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
 }
 
 /* Mobile Responsiveness */

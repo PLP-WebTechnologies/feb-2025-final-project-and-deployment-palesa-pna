@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             hamburger.classList.remove('fa-times');
         });
     });
-});
+    
 // Mobile menu toggle
 document.querySelector('.hamburger').addEventListener('click', () => {
     document.querySelector('.nav-links').classList.toggle('active');
@@ -86,25 +86,25 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 // Add to cart functionality
+
 document.querySelectorAll('.btn-add-to-cart').forEach(button => {
     button.addEventListener('click', function() {
+        // Add your cart logic here
         const productCard = this.closest('.product-card');
-        const productData = JSON.parse(productCard.getAttribute('data-product'));
+        const productName = productCard.querySelector('.product-title').textContent;
         
-        // Get existing cart or create empty array
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        // Show confirmation
+        const confirmation = document.createElement('div');
+        confirmation.className = 'add-to-cart-confirmation';
+        confirmation.textContent = `${productName} added to cart!`;
+        document.body.appendChild(confirmation);
         
-        // Check if item already exists in cart
-        const existingItem = cart.find(item => item.id === productData.id);
-        
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cart.push({
-                ...productData,
-                quantity: 1
-            });
-        }
+        // Remove after 3 seconds
+        setTimeout(() => {
+            confirmation.remove();
+        }, 3000);
+    });
+});
         
         // Save to localStorage
         localStorage.setItem('cart', JSON.stringify(cart));
