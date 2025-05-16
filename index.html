@@ -11,11 +11,26 @@
 </head>
 <body>
     <!-- Navigation -->
-   <header class="main-header">
-    <nav class="navbar">
-        <a href="index.html" class="logo">
-            <i class="fas fa-shopping-bag"></i> ShopEasy
-        </a>
+  <header class="main-header">
+        <nav class="navbar">
+            <a class="logo" href="/">
+                <i class="fas fa-shopping-bag"></i> ShopEasy
+            </a>
+            <ul class="nav-links">
+                <li><a class="active" href="/">Home</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li class="cart-icon"><a href="#">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a></li>
+            </ul>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
         
         <!-- Desktop Navigation -->
         <ul class="nav-links">
@@ -37,7 +52,23 @@
         </div>
     </nav>
 </header>
-
+<section class="hero" style="
+        background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('assets/hero-bg.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0 20px;
+    ">
+        <div class="hero-content">
+            <h1>Welcome to ShopEasy</h1>
+            <p>Discover amazing products at unbeatable prices</p>
+            <a class="btn btn-primary" href="/products">Shop Now</a>
+        </div>
+    </section>
 <!-- Products Page Content -->
 <div class="products-toolbar">
     <div class="filter-controls">
