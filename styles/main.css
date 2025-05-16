@@ -343,8 +343,49 @@ img {
 
 .featured-section, 
 .about-section, 
+/* Newsletter Section */
 .newsletter-section {
-  padding: 5rem 0;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 60px 0;
+}
+
+.newsletter-card {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    text-align: center;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 8px;
+}
+
+.newsletter-form .form-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.newsletter-form input {
+    flex: 1;
+    padding: 12px 15px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-message {
+    margin-top: 15px;
+    min-height: 20px;
+}
+
+@media (max-width: 600px) {
+    .newsletter-form .form-group {
+        flex-direction: column;
+    }
+    
+    .newsletter-card {
+        padding: 30px 20px;
+    }
 }
 
 /* Products Grid */
