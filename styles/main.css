@@ -581,3 +581,81 @@ img {
     font-size: 1.5rem;
   }
 }
+/* Add to your existing hero section styles */
+.hero {
+    position: relative;
+    z-index: 1; /* Ensure hero stays behind other content */
+}
+
+/* Add this new rule */
+.featured-section {
+    position: relative;
+    z-index: 2; /* Ensure products appear above hero background */
+    background-color: var(--light-gray); /* Add background to prevent transparency */
+}
+/* Replace your existing mobile nav styles with these */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
+        z-index: 1001; /* Ensure it's above other elements */
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%; /* Adjust width as needed */
+        height: 100vh;
+        background-color: var(--white);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 80px 30px 30px;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-links.active {
+        left: 0;
+    }
+
+    /* Add overlay when menu is open */
+    .nav-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 999;
+        display: none;
+    }
+
+    .nav-links.active + .nav-overlay {
+        display: block;
+    }
+}
+/* Prevent horizontal scrolling */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Ensure video background covers properly on mobile */
+.hero video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+/* Fix for mobile viewport */
+@viewport {
+    width: device-width;
+    zoom: 1.0;
+}

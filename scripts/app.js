@@ -135,3 +135,32 @@ document.querySelectorAll('input, select, textarea').forEach(input => {
         document.querySelector('meta[name="viewport"]').content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
     });
 });
+// Update your existing mobile menu JS
+document.addEventListener('DOMContentLoaded', function() {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    const navOverlay = document.createElement('div');
+    navOverlay.className = 'nav-overlay';
+    document.body.appendChild(navOverlay);
+
+    hamburger.addEventListener('click', function() {
+        navLinks.classList.toggle('active');
+        hamburger.classList.toggle('fa-times');
+        navOverlay.style.display = navLinks.classList.contains('active') ? 'block' : 'none';
+    });
+
+    navOverlay.addEventListener('click', function() {
+        navLinks.classList.remove('active');
+        hamburger.classList.remove('fa-times');
+        this.style.display = 'none';
+    });
+
+    // Close menu when clicking on links
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function() {
+            navLinks.classList.remove('active');
+            hamburger.classList.remove('fa-times');
+            navOverlay.style.display = 'none';
+        });
+    });
+});
