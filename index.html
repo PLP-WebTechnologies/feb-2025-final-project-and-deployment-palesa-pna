@@ -16,24 +16,48 @@
         <a href="index.html" class="logo">
             <i class="fas fa-shopping-bag"></i> ShopEasy
         </a>
-        <div class="hamburger">
-            <i class="fas fa-bars"></i>
-        </div>
+        
+        <!-- Desktop Navigation -->
         <ul class="nav-links">
-            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="index.html">Home</a></li>
             <li><a href="products.html">Products</a></li>
             <li><a href="about.html">About</a></li>
             <li><a href="contact.html">Contact</a></li>
-            <li class="cart-icon"><a href="#">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-count">0</span>
-            </a></li>
+            <li class="cart-icon">
+                <a href="#">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+            </li>
         </ul>
+        
+        <!-- Mobile Menu Toggle -->
+        <div class="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+</header>
+
+<!-- Products Page Content -->
+<div class="products-toolbar">
+    <div class="filter-controls">
+        <div class="filter-toggle">
+            <i class="fas fa-filter"></i>
+            <span>Filters</span>
+        </div>
+        <div class="sorting">
+            <select>
+                <option>Sort by</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+            </select>
+        </div>
+    </div>
+</div>
         <div class="mobile-menu-overlay"></div>
     </nav>
 </header>
-<div class="mobile-menu-overlay"></div>
-<!-- The overlay will be added by JavaScript -->
+
     <!-- Video Background -->
     <video autoplay muted loop playsinline style="
         position: absolute;
