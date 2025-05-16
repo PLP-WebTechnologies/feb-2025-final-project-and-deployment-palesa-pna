@@ -261,30 +261,38 @@ img {
 }
 
 /* Hero Section */
-.hero {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('assets/hero-bg.jpg');
-  background-size: cover;
-  background-position: center;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0 20px;
-  color: var(--white);
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 20px;
+    text-align: center;
+    color: white;
+    z-index: 2;
 }
 
 .hero-content h1 {
-  font-size: 3rem;
-  margin-bottom: 20px;
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
 
 .hero-content p {
-  font-size: 1.2rem;
-  margin-bottom: 30px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    .hero-content p {
+        font-size: 1.2rem;
+    }
 }
 
 /* Featured Products */
@@ -540,19 +548,26 @@ img {
 /* Newsletter Section */
 /* ==================== */
 /* ==================== */
+/* Newsletter Section */
 .newsletter-section {
-  padding: 60px 0;
-  background-color: var(--primary-color);
+  padding: 80px 0; /* Increased padding */
+  margin-bottom: 80px; /* More space before footer */
+  background-color: var(--primary-color); /* Blue background */
   color: var(--white);
 }
 
 .newsletter-card {
   max-width: 800px;
   margin: 0 auto;
-  padding: 40px;
+  padding: 50px; /* More padding inside card */
   text-align: center;
-  background-color: rgba(255,255,255,0.1);
-  border-radius: 8px;
+  background-color: rgba(255,255,255,0.1); /* Semi-transparent white */
+  border-radius: 12px; /* More rounded corners */
+}
+
+/* Make sure footer has proper spacing too */
+.main-footer {
+  padding-top: 80px; /* Adds space above footer content */
 }
 
 .newsletter-form .form-group {
