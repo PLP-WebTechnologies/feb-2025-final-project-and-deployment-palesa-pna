@@ -127,3 +127,67 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+document.addEventListener('DOMContentLoaded', function() {
+    const newsletterForm = document.getElementById('newsletterForm');
+    
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const emailInput = document.getElementById('newsletterEmail');
+            const email = emailInput.value.trim();
+            const formMessage = document.querySelector('.form-message');
+            
+            // Clear previous messages
+            formMessage.textContent = '';
+            formMessage.style.color = '';
+            
+            // Validate email
+            if (!validateEmail(email)) {
+                formMessage.textContent = 'Please enter a valid email address';
+                formMessage.style.color = 'var(--error-color)';
+                emailInput.focus();
+                return;
+            }
+            
+            // Submit form (you can use AJAX here)
+            subscribeEmail(email, formMessage);
+            
+            // Clear input
+            emailInput.value = '';
+        });
+    }
+    
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+    
+    function subscribeEmail(email, messageElement) {
+        // Here you would typically send to your backend
+        // This is a simulation with localStorage for demo purposes
+        
+        // Get existing subscribers or initialize array
+        let subscribers = JSON.parse(localStorage.getItem('newsletterSubscribers')) || [];
+        
+        // Check if already subscribed
+        if (subscribers.includes(email)) {
+            messageElement.textContent = 'You\'re already subscribed!';
+            messageElement.style.color = 'var(--accent-color)';
+            return;
+        }
+        
+        // Add new subscriber
+        subscribers.push(email);
+        localStorage.setItem('newsletterSubscribers', JSON.stringify(subscribers));
+        
+        // Show success message
+        messageElement.textContent = 'Thank you for subscribing! 🎉';
+        messageElement.style.color = 'var(--success-color)';
+        
+        // Optional: Hide message after 5 seconds
+        setTimeout(() => {
+            messageElement.textContent = '';
+        }, 5000);
+    }
+});

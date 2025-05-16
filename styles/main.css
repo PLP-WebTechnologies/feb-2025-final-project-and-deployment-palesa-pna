@@ -539,6 +539,7 @@ img {
 
 /* Newsletter Section */
 /* ==================== */
+/* ==================== */
 .newsletter-section {
   padding: 60px 0;
   background-color: var(--primary-color);
@@ -572,6 +573,7 @@ img {
   margin-top: 1rem;
   min-height: 20px;
 }
+
 
 /* Footer */
 .main-footer {
