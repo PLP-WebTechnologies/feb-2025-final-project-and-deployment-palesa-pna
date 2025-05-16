@@ -28,8 +28,110 @@ document.querySelectorAll('.nav-links a').forEach(link => {
         document.querySelector('.nav-links').classList.remove('active');
     });
 });
-// Pause video on mobile to save data
-if (window.innerWidth < 768) {
-    document.getElementById('heroVideo').pause();
-    document.getElementById('heroVideo').poster = "assets/hero-mobile.jpg";
+// Pause video when tab is inactive
+document.addEventListener('visibilitychange', () => {
+    const video = document.querySelector('.hero video');
+    if (document.hidden) {
+        video.pause();
+    } else {
+        video.play();
+    }
+});
+// Add to cart functionality
+document.querySelectorAll('.btn-add-to-cart').forEach(button => {
+    button.addEventListener('click', function() {
+        const productCard = this.closest('.product-card');
+        const productData = JSON.parse(productCard.getAttribute('data-product'));
+        
+        // Get existing cart or create empty array
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // Check if item already exists in cart
+        const existingItem = cart.find(item => item.id === productData.id);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                ...productData,
+                quantity: 1
+            });
+        }
+        
+        // Save to localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Update cart count
+        updateCartCount();
+        
+        // Show confirmation
+        showAddToCartConfirmation(productData.name);
+    });
+});
+
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.querySelectorAll('.cart-count').forEach(el => {
+        el.textContent = totalItems;
+    });
 }
+
+function showAddToCartConfirmation(productName) {
+    const confirmation = document.createElement('div');
+    confirmation.className = 'add-to-cart-confirmation';
+    confirmation.innerHTML = `
+        <i class="fas fa-check"></i>
+        ${productName} added to cart!
+    `;
+    document.body.appendChild(confirmation);
+    
+    setTimeout(() => {
+        confirmation.remove();
+    }, 3000);
+}
+// Add this temporary debug code
+document.querySelectorAll('.btn-add-to-cart').forEach(button => {
+    button.addEventListener('click', function() {
+        const productCard = this.closest('.product-card');
+        console.log('Product data:', productCard.getAttribute('data-product'));
+    });
+});
+// Mobile navigation toggle
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+
+hamburger.addEventListener('click', function() {
+    navLinks.classList.toggle('active');
+    this.classList.toggle('fa-times');
+});
+
+// Close menu when clicking on links
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', function() {
+        navLinks.classList.remove('active');
+        hamburger.classList.remove('fa-times');
+    });
+});
+
+// Handle window resize
+function handleResize() {
+    if (window.innerWidth > 768) {
+        navLinks.classList.remove('active');
+        hamburger.classList.remove('fa-times');
+    }
+}
+
+window.addEventListener('resize', handleResize);
+
+// Add touch support for mobile
+document.querySelectorAll('button, a').forEach(element => {
+    element.style.touchAction = 'manipulation';
+});
+
+// Prevent zooming on form inputs
+document.querySelectorAll('input, select, textarea').forEach(input => {
+    input.addEventListener('touchstart', function() {
+        document.querySelector('meta[name="viewport"]').content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+    });
+});
