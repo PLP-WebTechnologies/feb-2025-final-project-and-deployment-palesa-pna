@@ -6,99 +6,184 @@ document.addEventListener('DOMContentLoaded', function() {
     navOverlay.className = 'nav-overlay';
     document.body.appendChild(navOverlay);
 
+    // Mobile Menu Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const mainNav = document.getElementById('mainNav');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+
+    // Initialize cart
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartCount = document.querySelector('.cart-count');
+
     // Toggle mobile menu
-    hamburger.addEventListener('click', function() {
-        navLinks.classList.toggle('active');
-        this.classList.toggle('fa-times');
-        navOverlay.style.display = navLinks.classList.contains('active') ? 'block' : 'none';
-    });
+    function toggleMobileMenu() {
+        if (menuToggle && mainNav && mobileOverlay) {
+            menuToggle.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+                mobileOverlay.classList.toggle('active');
+                document.body.classList.toggle('no-scroll');
+                
+                // Toggle hamburger icon
+                const icon = menuToggle.querySelector('i');
+                if (icon) {
+                    icon.classList.toggle('fa-times');
+                }
+            });
+        }
+    }
 
-    // Close menu when clicking overlay
-    navOverlay.addEventListener('click', function() {
-        navLinks.classList.remove('active');
-        hamburger.classList.remove('fa-times');
-        this.style.display = 'none';
-    });
+    // Close mobile menu
+    function closeMobileMenu() {
+        if (mobileOverlay) {
+            mobileOverlay.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+                mobileOverlay.classList.remove('active');
+                document.body.classList.remove('no-scroll');
+                
+                const icon = menuToggle.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-times');
+                }
+            });
+        }
+    }
 
-    // Close menu when clicking on links
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', function() {
-            if (window.innerWidth <= 768) {
-                navLinks.classList.remove('active');
-                hamburger.classList.remove('fa-times');
-                navOverlay.style.display = 'none';
-            }
+    // Close menu when clicking on nav links
+    function closeMenuOnLinkClick() {
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (mainNav && mobileOverlay && menuToggle) {
+                    mainNav.classList.remove('active');
+                    mobileOverlay.classList.remove('active');
+                    document.body.classList.remove('no-scroll');
+                    
+                    const icon = menuToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                    }
+                }
+            });
         });
-    });
+    }
+
+    // Update cart count
+    function updateCartCount() {
+        if (cartCount) {
+            const totalItems = cart.reduce((total, item) => total + (item.quantity || 0), 0);
+            cartCount.textContent = totalItems;
+        }
+    }
+
+    // Add to cart functionality
+    function setupAddToCart() {
+        document.querySelectorAll('.btn-add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const productCard = this.closest('.product-card');
+                if (!productCard) return;
+
+                const productId = productCard.dataset.productId || Date.now().toString();
+                const productNameElement = productCard.querySelector('.product-title');
+                const priceElement = productCard.querySelector('.current-price');
+                
+                if (!productNameElement || !priceElement) return;
+
+                const productName = productNameElement.textContent;
+                const priceText = priceElement.textContent;
+                const productPrice = parseFloat(priceText.replace(/[^0-9.]/g, '')) || 0;
+
+                // Add to cart
+                const existingItem = cart.find(item => item.id === productId);
+                if (existingItem) {
+                    existingItem.quantity = (existingItem.quantity || 0) + 1;
+                } else {
+                    cart.push({
+                        id: productId,
+                        name: productName,
+                        price: productPrice,
+                        quantity: 1
+                    });
+                }
+
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+
+                // Show confirmation
+                const confirmation = document.createElement('div');
+                confirmation.className = 'add-to-cart-confirmation';
+                confirmation.textContent = `${productName} added to cart!`;
+                document.body.appendChild(confirmation);
+
+                setTimeout(() => {
+                    confirmation.remove();
+                }, 3000);
+            });
+        });
+    }
+
+    // Newsletter form handling
+    function setupNewsletterForm() {
+        const newsletterForm = document.getElementById('newsletterForm');
+        
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const emailInput = document.getElementById('newsletterEmail');
+                const formMessage = document.querySelector('.form-message');
+                
+                if (!emailInput || !formMessage) return;
+
+                const email = emailInput.value.trim();
+                
+                // Validate email
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    formMessage.textContent = 'Please enter a valid email address';
+                    formMessage.style.color = '#e74c3c';
+                    emailInput.focus();
+                    return;
+                }
+                
+                // Save to localStorage
+                let subscribers = JSON.parse(localStorage.getItem('newsletterSubscribers')) || [];
+                
+                if (subscribers.includes(email)) {
+                    formMessage.textContent = 'You\'re already subscribed!';
+                    formMessage.style.color = '#ffc107';
+                } else {
+                    subscribers.push(email);
+                    localStorage.setItem('newsletterSubscribers', JSON.stringify(subscribers));
+                    
+                    formMessage.textContent = 'Thank you for subscribing! 🎉';
+                    formMessage.style.color = '#28a745';
+                    emailInput.value = '';
+                    
+                    setTimeout(() => {
+                        formMessage.textContent = '';
+                    }, 5000);
+                }
+            });
+        }
+    }
+
+    // Initialize all functions
+    toggleMobileMenu();
+    closeMobileMenu();
+    closeMenuOnLinkClick();
+    updateCartCount();
+    setupAddToCart();
+    setupNewsletterForm();
 
     // Handle window resize
     window.addEventListener('resize', function() {
-        if (window.innerWidth > 768) {
-            navLinks.classList.remove('active');
-            hamburger.classList.remove('fa-times');
-            navOverlay.style.display = 'none';
+        if (window.innerWidth > 768 && mainNav) {
+            mainNav.classList.remove('active');
+            if (mobileOverlay) mobileOverlay.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+            
+            const icon = menuToggle?.querySelector('i');
+            if (icon) icon.classList.remove('fa-times');
         }
     });
-
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    // Add to cart functionality
-    document.querySelectorAll('.btn-add-to-cart').forEach(button => {
-        button.addEventListener('click', function() {
-            const productCard = this.closest('.product-card');
-            const productName = productCard.querySelector('.product-title').textContent;
-            
-            // Update cart count
-            const cartCount = document.querySelector('.cart-count');
-            let currentCount = parseInt(cartCount.textContent) || 0;
-            cartCount.textContent = currentCount + 1;
-            
-            // Show confirmation
-            const confirmation = document.createElement('div');
-            confirmation.className = 'add-to-cart-confirmation';
-            confirmation.textContent = `${productName} added to cart!`;
-            document.body.appendChild(confirmation);
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                confirmation.remove();
-            }, 3000);
-            
-            // Save to localStorage
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const productId = productCard.getAttribute('data-product-id') || Date.now();
-            const existingItem = cart.find(item => item.id === productId);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({
-                    id: productId,
-                    name: productName,
-                    quantity: 1,
-                    price: parseFloat(productCard.querySelector('.current-price').textContent.replace(/[^0-9.]/g, ''))
-                });
-            }
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-        });
-    });
-
-    // Initialize cart count
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    document.querySelector('.cart-count').textContent = totalItems;
 
     // Pause video when tab is inactive
     const heroVideo = document.querySelector('.hero video');
@@ -110,84 +195,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 heroVideo.play().catch(e => console.log('Autoplay prevented:', e));
             }
         });
-    }
-
-    // Mobile touch support
-    document.querySelectorAll('button, a').forEach(element => {
-        element.style.touchAction = 'manipulation';
-    });
-
-    // Prevent zooming on form inputs
-    document.querySelectorAll('input, select, textarea').forEach(input => {
-        input.addEventListener('touchstart', function() {
-            const viewportMeta = document.querySelector('meta[name="viewport"]');
-            if (viewportMeta) {
-                viewportMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
-            }
-        });
-    });
-});
-document.addEventListener('DOMContentLoaded', function() {
-    const newsletterForm = document.getElementById('newsletterForm');
-    
-    if (newsletterForm) {
-        newsletterForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const emailInput = document.getElementById('newsletterEmail');
-            const email = emailInput.value.trim();
-            const formMessage = document.querySelector('.form-message');
-            
-            // Clear previous messages
-            formMessage.textContent = '';
-            formMessage.style.color = '';
-            
-            // Validate email
-            if (!validateEmail(email)) {
-                formMessage.textContent = 'Please enter a valid email address';
-                formMessage.style.color = 'var(--error-color)';
-                emailInput.focus();
-                return;
-            }
-            
-            // Submit form (you can use AJAX here)
-            subscribeEmail(email, formMessage);
-            
-            // Clear input
-            emailInput.value = '';
-        });
-    }
-    
-    function validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    }
-    
-    function subscribeEmail(email, messageElement) {
-        // Here you would typically send to your backend
-        // This is a simulation with localStorage for demo purposes
-        
-        // Get existing subscribers or initialize array
-        let subscribers = JSON.parse(localStorage.getItem('newsletterSubscribers')) || [];
-        
-        // Check if already subscribed
-        if (subscribers.includes(email)) {
-            messageElement.textContent = 'You\'re already subscribed!';
-            messageElement.style.color = 'var(--accent-color)';
-            return;
-        }
-        
-        // Add new subscriber
-        subscribers.push(email);
-        localStorage.setItem('newsletterSubscribers', JSON.stringify(subscribers));
-        
-        // Show success message
-        messageElement.textContent = 'Thank you for subscribing! 🎉';
-        messageElement.style.color = 'var(--success-color)';
-        
-        // Optional: Hide message after 5 seconds
-        setTimeout(() => {
-            messageElement.textContent = '';
-        }, 5000);
     }
 });
